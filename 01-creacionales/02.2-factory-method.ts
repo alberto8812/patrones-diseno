@@ -16,11 +16,11 @@
  * 	!Descripción:
   1.	Completen las clases SalesReport e InventoryReport para implementar 
       la interfaz Report, generando el contenido de cada reporte en el método generate.
-	  
+    
   2.	Implementen las clases SalesReportFactory e InventoryReportFactory 
       para crear instancias de SalesReport y InventoryReport, respectivamente.
 
-	3.	Prueben el programa generando diferentes tipos de reportes usando
+  3.	Prueben el programa generando diferentes tipos de reportes usando
       el prompt para seleccionar el tipo de reporte.
  */
 
@@ -35,11 +35,17 @@ interface Report {
 // Implementar SalesReport e InventoryReport
 
 class SalesReport implements Report {
+  generate(): void {
+    console.log('Generando reporte de ventas...');
+  }
   // TODO: implementar el método e imprimir en consola:
   // 'Generando reporte de ventas...'
 }
 
 class InventoryReport implements Report {
+  generate(): void {
+    console.log('Generando reporte de inventario...');
+  }
   // TODO: implementar el método e imprimir en consola:
   // 'Generando reporte de inventario...'
 }
@@ -47,7 +53,7 @@ class InventoryReport implements Report {
 // 3. Clase Base ReportFactory con el Método Factory
 
 abstract class ReportFactory {
-  abstract createReport(): Report;
+  protected abstract createReport(): Report;
 
   generateReport(): void {
     const report = this.createReport();
@@ -59,20 +65,20 @@ abstract class ReportFactory {
 
 class SalesReportFactory extends ReportFactory {
   createReport(): Report {
-    throw new Error('Method not implemented.');
+    return new SalesReport();// se pueden recibir los datos de la venta y generar el reporte
   }
 }
 
 class InventoryReportFactory extends ReportFactory {
   createReport(): Report {
-    throw new Error('Method not implemented.');
+    return new InventoryReport(); // se pueden recibir los datos del inventario y generar el reporte
   }
 }
 
 // 5. Código Cliente para Probar
 
 function main() {
-  let reportFactory: ReportFactory;
+  let reportFactory: ReportFactory;// se crea una variable para almacenar la fabrica de reportes
 
   const reportType = prompt(
     '¿Qué tipo de reporte deseas? %c(sales/inventory)',
