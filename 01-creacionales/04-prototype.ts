@@ -25,6 +25,11 @@ class Document {
         this.author = author
     }
 
+    // referencias  enviamos los valores para crear un clone
+    // es un metodo que permite retornar un clone
+    clone() {
+        return new Document(this.title, this.content, this.author)
+    }
 
     displayInfo() {
         console.log(this.title)
