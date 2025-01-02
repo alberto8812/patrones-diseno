@@ -14,118 +14,83 @@
 
 import { COLORS } from '../helpers/colors.ts';
 
-class Projector {
+
+class Proyector {
   turnOn() {
     console.log('Proyector encendido');
   }
-
   turnOff() {
-    console.log('Proyecto apagado');
+    console.log('Proyector apagado');
   }
+
 }
 
 class SoundSystem {
   on() {
     console.log('Sistema de sonido encendido');
   }
-
   off() {
     console.log('Sistema de sonido apagado');
   }
 }
 
 class VideoPlayer {
-  on() {
-    console.log('Video player encendido');
-  }
-
   play(movie: string) {
-    console.log(`Reproduciendo %c${movie}`, COLORS.blue);
+    console.log(`Reproduciendo ${movie}`);
   }
-
   stop() {
-    console.log('Película detenida');
-  }
-
-  off() {
-    console.log('Video player apagado');
+    console.log('Video detenido');
   }
 }
 
 class PopcornMaker {
-  poppingPopcorn() {
-    console.log('Haciendo palomitas');
+  poppingPopCorn() {
+    console.log('Máquina de palomitas encendida');
+  }
+  turnOffPoppingPopCorn() {
+    console.log('Máquina de palomitas apagada');
   }
 
-  turnOffPoppingPopcorn() {
-    console.log('Deteniendo las palomitas');
-  }
 }
 
-interface HomeTheaterFacadeOptions {
-  projector: Projector;
+// Facade patron fachada
+
+class HomeTheaterFacade {
+  proyector: Proyector;
   soundSystem: SoundSystem;
   videoPlayer: VideoPlayer;
   popcornMaker: PopcornMaker;
-}
 
-class HomeTheaterFacade {
-  private projector: Projector;
-  private soundSystem: SoundSystem;
-  private videoPlayer: VideoPlayer;
-  private popcornMaker: PopcornMaker;
-
-  constructor({
-    popcornMaker,
-    projector,
-    soundSystem,
-    videoPlayer,
-  }: HomeTheaterFacadeOptions) {
-    this.projector = projector;
-    this.popcornMaker = popcornMaker;
-    this.videoPlayer = videoPlayer;
+  constructor(proyector: Proyector, soundSystem: SoundSystem, videoPlayer: VideoPlayer, popcornMaker: PopcornMaker) {
+    this.proyector = proyector;
     this.soundSystem = soundSystem;
+    this.videoPlayer = videoPlayer;
+    this.popcornMaker = popcornMaker;
   }
 
-  watchMovie(movie: string): void {
-    console.log('%cPreparando para ver la película', COLORS.blue);
-    this.projector.turnOn();
+  watchMovie(movie: string) {
+    this.popcornMaker.poppingPopCorn();
+    this.proyector.turnOn();
     this.soundSystem.on();
-    this.popcornMaker.poppingPopcorn();
-    this.videoPlayer.on();
     this.videoPlayer.play(movie);
-
-    console.log('%cDisfrute la película', COLORS.blue);
   }
 
-  endWatchingMovie(): void {
-    console.log('%c\n\nPreparando para detener la película', COLORS.blue);
-    this.projector.turnOff();
+  endMovie() {
+    this.popcornMaker.turnOffPoppingPopCorn();
+    this.proyector.turnOff();
     this.soundSystem.off();
-    this.popcornMaker.turnOffPoppingPopcorn();
     this.videoPlayer.stop();
-    this.videoPlayer.off();
-
-    console.log('%cSistema apagado\n', COLORS.blue);
   }
 }
 
-function main() {
-  const projector = new Projector();
+function facadePattern() {
+  const proyector = new Proyector();
   const soundSystem = new SoundSystem();
   const videoPlayer = new VideoPlayer();
   const popcornMaker = new PopcornMaker();
 
-  const homeTheater = new HomeTheaterFacade({
-    projector,
-    soundSystem,
-    videoPlayer,
-    popcornMaker,
-  });
+  const homeTheater = new HomeTheaterFacade(proyector, soundSystem, videoPlayer, popcornMaker);
 
-  homeTheater.watchMovie('Los Avengers');
-
-  homeTheater.endWatchingMovie();
+  homeTheater.watchMovie('The Avengers');
+  homeTheater.endMovie();
 }
-
-main();
