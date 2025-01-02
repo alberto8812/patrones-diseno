@@ -11,12 +11,9 @@
  *
  */
 
-import { COLORS } from '../helpers/colors.ts';
-
 class Player {
   name: string;
   level: number;
-
   constructor(name: string, level: number) {
     this.name = name;
     this.level = level;
@@ -27,45 +24,33 @@ interface Room {
   enter(player: Player): void;
 }
 
-class SecretRoom implements Room {
+class SecrearRoom implements Room {
   enter(player: Player): void {
-    console.log(`%cBienvenido a la sala secreta, ${player.name}`, COLORS.blue);
-    console.log(`Una gran enemigo te espera`);
+    console.log(`${player.name} ha entrado a la sala secreta`);
   }
 }
 
-// 3. Clase Proxy - Magic Portal
+//3. Crear un proxy - magic portal
 class MagicPortal implements Room {
-  private secretRom: Room;
+  private secreatRoom: SecrearRoom;;
 
-  constructor(room: Room) {
-    this.secretRom = room;
+  constructor(secreatRoom: SecrearRoom) {
+    this.secreatRoom = secreatRoom;
   }
 
   enter(player: Player): void {
     if (player.level >= 10) {
-      this.secretRom.enter(player);
-      return;
+      this.secreatRoom.enter(player);
+    } else {
+      console.log(`${player.name} no tiene permiso para entrar a la sala secreta`);
     }
-
-    console.log(
-      `%cLo siento mucho ${player.name}, Tu nivel ${player.level}, es muy bajo, necesitas nivel 10`,
-      COLORS.red
-    );
   }
 }
 
 function main() {
-  const portal = new MagicPortal(new SecretRoom()); // Proxy
+  const player = new Player('John', 9);
+  const secreatRoom = new SecrearRoom();
+  const magicPortal = new MagicPortal(secreatRoom);
 
-  const player1 = new Player('Aventurero A', 5);
-  const player2 = new Player('Aventurero B', 15);
-
-  console.log('%cAventurero A intenta entrar al portal', COLORS.blue);
-  portal.enter(player1);
-
-  console.log('%c\nAventurero B intenta entrar al portal', COLORS.blue);
-  portal.enter(player2);
-}
-
-main();
+  magicPortal.enter(player);
+} 
