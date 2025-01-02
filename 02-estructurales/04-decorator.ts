@@ -12,26 +12,20 @@
  * https://refactoring.guru/es/design-patterns/decorator
  */
 
-import { COLORS } from '../helpers/colors.ts';
-
 interface Notification {
   send(message: string): void;
 }
 
 class BasicNotification implements Notification {
   send(message: string): void {
-    console.log(
-      `%cEnviando notificación básica: %c${message}`,
-      COLORS.blue,
-      COLORS.white
-    );
+    console.log(`Basic message: ${message}`);
   }
 }
 
-// Clase decoradora
+// clase decoradora
+
 abstract class NotificationDecorator implements Notification {
   protected notification: Notification;
-
   constructor(notification: Notification) {
     this.notification = notification;
   }
@@ -41,44 +35,43 @@ abstract class NotificationDecorator implements Notification {
   }
 }
 
-// Crear diferentes decoradores
-class EmailDecorator extends NotificationDecorator {
-  private sendEmail(message: string) {
-    console.log(
-      `%cEnviando notificación por correo electrónico:%c${message}`,
-      COLORS.green,
-      COLORS.white
-    );
+
+//crear diferentes decoradores
+
+class Emaildecoretor extends NotificationDecorator {
+
+  private sendEmail(message: string): void {
+    console.log(`Email message: ${message}`);
   }
 
+
   override send(message: string): void {
-    super.send(message);
+    super.send(message);//llamamos al metodo de la clase padre
     this.sendEmail(message);
+    console.log(`Email message: ${message}`);
   }
 }
+//crear diferentes decoradores
 
-class SMSDecorator extends NotificationDecorator {
-  private sendSMS(message: string) {
-    console.log(
-      `%cEnviando notificación por SMS: %c${message}`,
-      COLORS.red,
-      COLORS.white
-    );
+class Smsdecoretor extends NotificationDecorator {
+
+  private sendSMS(message: string): void {
+    console.log(`SMS message: ${message}`);
   }
+
 
   override send(message: string): void {
-    super.send(message);
+    super.send(message);//llamamos al metodo de la clase padre
     this.sendSMS(message);
+    console.log(`Email message: ${message}`);
   }
 }
 
-function main() {
-  let notification: Notification = new BasicNotification();
 
-  notification = new EmailDecorator(notification);
-  notification = new SMSDecorator(notification);
+function mainDecorator() {
+  const notification = new BasicNotification();
+  const emailDecorator = new Emaildecoretor(notification);
+  const smsDecorator = new Smsdecoretor(emailDecorator);
 
-  notification.send('Alerta de sistema!');
-}
-
-main();
+  smsDecorator.send('Hello world');
+} 

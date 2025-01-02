@@ -11,96 +11,66 @@
 
 import { COLORS } from '../helpers/colors.ts';
 
+
 interface Location {
-  display(coordinates: { x: number; y: number }): void;
+    display(x: number, y: number): void;
 }
 
-// Flyweight
+// flyweight
+
 class LocationIcon implements Location {
-  private type: string; // hospital, escuela, parque
-  private iconImage: string; // imagen del marcador
-
-  constructor(type: string, iconImage: string) {
-    this.type = type;
-    this.iconImage = iconImage;
-  }
-
-  display(coordinates: { x: number; y: number }): void {
-    console.log(
-      `Coords: ${this.type} en ${coordinates.x}, ${coordinates.y} con ícono %c[${this.iconImage}]`,
-      COLORS.green
-    );
-  }
-}
-
-// Fábrica de Flyweights
-// {
-//   escuela: assets/school.png,
-//   hospital: assets/hospital.png,
-// }
-
-class LocationFactory {
-  private icons: Record<string, LocationIcon> = {};
-
-  // Escuela, hospital, parque,
-  getLocationIcon(type: string): LocationIcon {
-    if (!this.icons[type]) {
-      console.log(`%cCreando una instancia del ícono de ${type}`, COLORS.red);
-      const iconImage = `imagen_de_${type.toLowerCase()}.png`;
-      this.icons[type] = new LocationIcon(type, iconImage);
+    private type: string;//hotel, restaurant, etc
+    private iconImage: string;//imagen del marcador
+    constructor(type: string, iconImage: string) {
+        this.type = type;
+        this.iconImage = iconImage;
     }
 
-    return this.icons[type];
-  }
+    display(x: number, y: number): void {
+        console.log(`Mostrando ${this.type} en (${x}, ${y}) con el icono ${this.iconImage}`);
+    }
 }
+
+//fabrica de flyweights
+/**
+ * tiene todos los elementos que van a estar prensete en memoria una unica vez
+ */
+class LocationIconFactory {
+    //grupo de marcadores que comparten el icono de laubicaion
+    private icons: Record<string, LocationIcon> = {};
+
+    getLocation(type: string): LocationIcon {
+        let location = this.icons[type];
+        if (!location) {
+            const iconImage = `imagen_de_${type.toLocaleLowerCase()}.png`;
+            this.icons[type] = new LocationIcon(type, iconImage);
+        }
+        return location;
+    }
+}
+//
+
 
 class MapLocation {
-  private coordinates: { x: number; y: number };
-  private icon: LocationIcon;
+    private coordinattes: { x: number, y: number }
+    private icon: LocationIcon;
 
-  constructor(x: number, y: number, icon: LocationIcon) {
-    this.coordinates = { x, y };
-    this.icon = icon;
-  }
+    constructor(icon: LocationIcon, x: number, y: number) {
+        this.icon = icon;
+        this.coordinattes = { x, y };
+    }
 
-  display() {
-    this.icon.display(this.coordinates);
-  }
+    display(): void {
+        this.icon.display(this.coordinattes.x, this.coordinattes.y);
+    }
+
 }
 
-function main() {
-  const factory = new LocationFactory();
 
-  const locations = [
-    new MapLocation(10, 20, factory.getLocationIcon('hospital')),
-    new MapLocation(20, 40, factory.getLocationIcon('hospital')),
-    new MapLocation(30, 60, factory.getLocationIcon('hospital')),
+function mainFlyweight() {
+    const facttory = new LocationIconFactory();
 
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-    new MapLocation(35, 65, factory.getLocationIcon('parque')),
-
-    new MapLocation(30, 60, factory.getLocationIcon('hospital')),
-    new MapLocation(30, 60, factory.getLocationIcon('hospital')),
-    new MapLocation(30, 60, factory.getLocationIcon('hospital')),
-    new MapLocation(30, 60, factory.getLocationIcon('hospital')),
-
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-    new MapLocation(30, 60, factory.getLocationIcon('Escuela')),
-  ];
-
-  locations.forEach((location) => location.display());
+    const locations = [
+        new MapLocation(facttory.getLocation('hotel'), 10, 20)
+    ]
 }
-
-main();

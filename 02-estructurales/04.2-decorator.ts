@@ -22,11 +22,12 @@ interface Character {
 // Representa un personaje básico sin accesorios
 // TODO: Implementar la interfaz Character
 class BasicCharacter implements Character {
+  // TODO: Implementar los métodos de la interfaz
   getDescription(): string {
-    return 'Personaje básico';
+    return `Personaje básico`;
   }
-
-  getStats(): { attack: number; defense: number } {
+  // TODO: Implementar los métodos de la interfaz
+  getStats(): { attack: number; defense: number; } {
     return { attack: 10, defense: 10 };
   }
 }
@@ -34,16 +35,22 @@ class BasicCharacter implements Character {
 // 3. Clase Decoradora CharacterDecorator
 // Actúa como base para los decoradores específicos
 abstract class CharacterDecorator implements Character {
+  // Protected para que las clases hijas puedan acceder a la propiedad
+  // TODO: Definir la propiedad protected character de tipo Character
   protected character: Character;
-
+  // TODO: Definir el constructor que recibe un personaje de tipo Character
+  // Private no permitiría que las clases hijas accedan a la propiedad
   constructor(character: Character) {
     this.character = character;
   }
 
+  // TODO: Implementar los métodos de la interfaz Character, pero retornando
+  // la descripción y estadísticas del personaje decorado
   getDescription(): string {
     return this.character.getDescription();
   }
 
+  // TODO: Implementar los métodos de la interfaz Character
   getStats(): { attack: number; defense: number } {
     return this.character.getStats();
   }
@@ -100,6 +107,7 @@ class RingDecorator extends CharacterDecorator {
     return { attack: stats.attack + 3, defense: stats.defense };
   }
 }
+
 
 // 7. Código Cliente para Probar el Decorador
 
